@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Theme.Edukthw06" parent="Theme.Material3.DayNight.NoActionBar" />
 
-    <style name="Theme.Edukthw06" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- тема для сплэш-скрина-->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- фон экрана -->
+        <item name="windowSplashScreenBackground">@color/gray_primary</item>
+        <!-- иконка -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <!-- тема после сплэш-скрина -->
+        <item name="postSplashScreenTheme">@style/Theme.Edukthw06</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/gray_primary</item>
+        <item name="cornerRadius">5dp</item>
+    </style>
 </resources>
