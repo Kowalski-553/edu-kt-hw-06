@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/loginFragment"
+        android:icon="@drawable/ic_nav_login"
+        android:title="@string/title_login" />
+    <item
+        android:id="@+id/quizFragment"
+        android:icon="@drawable/ic_nav_quiz"
+        android:title="@string/title_quiz" />
+    <item
+        android:id="@+id/resultFragment"
+        android:icon="@drawable/ic_nav_result"
+        android:title="@string/title_result" />
+</menu>

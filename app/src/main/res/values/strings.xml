@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">edu-kt-hw-06</string>
+
+    <!-- навигация -->
+    <string name="title_login">Вход</string>
+    <string name="title_quiz">Тест</string>
+    <string name="title_result">Результат</string>
+
+    <!-- экран входа -->
+    <string name="login_title">Вход в приложение</string>
+    <string name="login_hint">Логин</string>
+    <string name="password_hint">Пароль</string>
+    <string name="login_button">Войти</string>
+    <string name="login_stub">Авторизация не работает. Будет в ДЗ-8</string>
+    <string name="login_stub_result">точно-точно не работает</string>
+
+    <!-- экран теста -->
+    <string name="quiz_stub">В этом фрагменте будет квиз!</string>
+
+    <!-- экран результата -->
+    <string name="result_stub">Это место для результатов теста</string>
 </resources>
