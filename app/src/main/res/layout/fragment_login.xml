@@ -11,13 +11,24 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- меняем заголовок на экране авторизации в зависимости от состояния авторизации -->
         <TextView
+            android:id="@+id/textViewLoginTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/login_title"
             android:textSize="24sp"
             android:textStyle="bold" />
+
+        <!-- статус показывается, если в Shared preferences есть сохраненные данные пользователя -->
+        <TextView
+            android:id="@+id/textViewAuthorized"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutLogin"
@@ -58,13 +69,36 @@
             android:layout_marginTop="16dp"
             android:text="@string/login_button" />
 
+        <!-- ошибка проверки пары логин-пароль -->
         <TextView
-            android:id="@+id/textViewLoginStub"
+            android:id="@+id/textViewLoginError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/login_stub"
-            android:textSize="16sp" />
+            android:layout_marginTop="8dp"
+            android:text="@string/login_error"
+            android:textColor="?attr/colorError"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <!-- кнопка Продолжить, которая показывается, если данные входа уже сохранены на момет входа в приложение -->
+        <Button
+            android:id="@+id/buttonContinue"
+            style="@style/Widget.App.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/login_continue"
+            android:visibility="gone" />
+
+        <!-- кнопка разлогина, видна только когда пользователь уже авторизован -->
+        <Button
+            android:id="@+id/buttonLogout"
+            style="@style/Widget.App.Button.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/logout_button"
+            android:visibility="gone" />
 
     </LinearLayout>
 </ScrollView>

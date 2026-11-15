@@ -13,7 +13,12 @@
     </style>
 
     <style name="Widget.App.Button" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/gray_primary</item>
+        <item name="backgroundTint">@color/button_bg_tint</item>
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="cornerRadius">5dp</item>
+    </style>
+
+    <style name="Widget.App.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
         <item name="cornerRadius">5dp</item>
     </style>
 </resources>

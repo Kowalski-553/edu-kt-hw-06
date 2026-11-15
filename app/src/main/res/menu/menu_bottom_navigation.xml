@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- вкладки нижнего меню: только экраны основного графа, входа здесь нет, я его вынес наверх -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/loginFragment"
-        android:icon="@drawable/ic_nav_login"
-        android:title="@string/title_login" />
     <item
         android:id="@+id/quizFragment"
         android:icon="@drawable/ic_nav_quiz"
