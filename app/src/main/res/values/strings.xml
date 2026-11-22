@@ -29,6 +29,7 @@
     <string name="quiz_finish">Завершить</string>
     <string name="quiz_finished">Тест завершён! Результат сохранён</string>
     <string name="quiz_restart">Пройти заново</string>
+    <string name="quiz_result_countdown">Экран результатов через:</string>
     <string name="quiz_empty">Вопросы не найдены</string>
 
     <!-- экран результата -->

@@ -11,12 +11,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.model.KeyPath
+import com.airbnb.lottie.value.LottieValueCallback
 import com.example.edu_kt_hw_06.data.AuthPreferences
 import com.example.edu_kt_hw_06.data.Question
 import com.example.edu_kt_hw_06.data.QuizRepository
 import com.example.edu_kt_hw_06.data.QuizResult
 import com.example.edu_kt_hw_06.databinding.FragmentQuizBinding
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.radiobutton.MaterialRadioButton
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -36,6 +41,9 @@ class QuizFragment : Fragment() {
 
     private val sessionViewModel: QuizSessionViewModel by activityViewModels()
     private val navController: NavController get() = findNavController()
+
+    /** джоба отсчёта до экрана результатов, мы её отменяем, если экран закрыли или тест перезапустили */
+    private var countdownJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +81,8 @@ class QuizFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        countdownJob?.cancel()
+        countdownJob = null
         _binding = null
     }
 
@@ -94,6 +104,7 @@ class QuizFragment : Fragment() {
             binding.layoutFinished.isVisible = true
             binding.buttonRestart.isVisible = false
             binding.textViewFinished.setText(R.string.quiz_empty)
+            hideResultCountdown()
             return
         }
         renderQuestion(question)
@@ -158,6 +169,12 @@ class QuizFragment : Fragment() {
         binding.layoutFinished.isVisible = true
         binding.buttonRestart.isVisible = true
         binding.textViewFinished.setText(R.string.quiz_finished)
+        // отсчёт показываем только пока переход на экран результата ещё не выполнен
+        if (sessionViewModel.isResultNavigationPending) {
+            startResultCountdown()
+        } else {
+            hideResultCountdown()
+        }
     }
 
     private fun onStartClick() {
@@ -180,31 +197,63 @@ class QuizFragment : Fragment() {
         )
         sessionViewModel.finish(result)
         renderFinished()
-        navigateToResultAfterDelay()
     }
 
     private fun onRestartClick() {
+        // новый заход: старый отсчёт и его переход на результат больше не нужны
+        hideResultCountdown()
         sessionViewModel.restart()
         renderSession()
     }
 
-    /** здесь потом будет анимация. Сейчас пока просто задерживаемся на 1 секунду посе прохождения
-     * и потом автоматически уходим на экран результата */
-    private fun navigateToResultAfterDelay() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            delay(RESULT_NAVIGATION_DELAY_MS)
-            // пользователь мог за секунду уйти на другую вкладку или начать заново -
+    /**
+     * Отсчёт до экрана результатов: Lottie считает в обратном порядке от 5,
+     * после чего автоматически открываем вкладку результата.
+     */
+    private fun startResultCountdown() {
+        val animation = binding.animationCountdown
+        binding.textViewCountdownLabel.isVisible = true
+        animation.isVisible = true
+        // в JSON зашит базовый colorPrimary, в тёмной теме подменяем цвет на актуальный из темы
+        val primaryColor: Int = MaterialColors.getColor(
+            animation,
+            com.google.android.material.R.attr.colorPrimary
+        )
+        animation.addValueCallback(KeyPath("**"), LottieProperty.COLOR, LottieValueCallback(primaryColor))
+        animation.addValueCallback(
+            KeyPath("**"),
+            LottieProperty.STROKE_COLOR,
+            LottieValueCallback(primaryColor)
+        )
+        animation.progress = 0f
+        animation.playAnimation()
+
+        countdownJob?.cancel()
+        countdownJob = viewLifecycleOwner.lifecycleScope.launch {
+            delay(RESULT_COUNTDOWN_MS)
+            // пользователь мог уйти на другую вкладку или начать тест заново -
             // тогда не мешаем ему и остаёмся на месте
-            val keepWaiting: Boolean = sessionViewModel.isFinished &&
+            val keepWaiting: Boolean = sessionViewModel.isResultNavigationPending &&
                 navController.currentDestination?.id == R.id.quizFragment
             if (isAdded && keepWaiting) {
+                sessionViewModel.consumeResultNavigation()
                 navController.navigateToTab(R.id.resultFragment)
             }
         }
     }
 
+    private fun hideResultCountdown() {
+        countdownJob?.cancel()
+        countdownJob = null
+        binding.textViewCountdownLabel.isVisible = false
+        binding.animationCountdown.apply {
+            cancelAnimation()
+            isVisible = false
+        }
+    }
+
     private companion object {
-        const val RESULT_NAVIGATION_DELAY_MS = 1_000L
+        const val RESULT_COUNTDOWN_MS = 5_000L
         const val ANSWERS_MARGIN_DP = 8
     }
 }

@@ -1,5 +1,7 @@
 package com.example.edu_kt_hw_06
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,12 +9,19 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.model.KeyPath
+import com.airbnb.lottie.value.LottieValueCallback
 import com.example.edu_kt_hw_06.data.AuthPreferences
 import com.example.edu_kt_hw_06.data.QuizRepository
 import com.example.edu_kt_hw_06.databinding.FragmentLoginBinding
+import com.google.android.material.color.MaterialColors
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Экран входа сделан "двухрежимным". Стартовый экран, при входе в приложение, и потом
@@ -117,13 +126,54 @@ class LoginFragment : Fragment() {
         }
 
         authPreferences.save(login, password)
-        if (isProfileMode) {
-            // профиль открыт поверх вкладок - просто возвращаемся назад
-            navController.popBackStack()
-            return
+        // если пользователь окажется на экране после анимации, то возвращаем кнопку
+        binding.buttonLogin.isEnabled = false
+        playSuccessAnimation {
+            binding.buttonLogin.isEnabled = true
+            if (isProfileMode) {
+                // профиль открыт поверх вкладок - просто возвращаемся назад
+                navController.popBackStack()
+            } else {
+                enterMainGraph()
+            }
         }
+    }
 
-        enterMainGraph()
+    /**
+     * lottie-анимация успешного входа, пауза 1 секунду и переход в приложение
+     */
+    private fun playSuccessAnimation(onFinished: () -> Unit) {
+        val animation = binding.animationAuthSuccess
+        animation.isVisible = true
+        animation.addValueCallback(
+            KeyPath("ring", "**"),
+            LottieProperty.STROKE_COLOR,
+            LottieValueCallback(
+                MaterialColors.getColor(animation, com.google.android.material.R.attr.colorPrimary)
+            )
+        )
+        animation.removeAllAnimatorListeners()
+        animation.addAnimatorListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                continueAfterSuccessAnimation(onFinished)
+            }
+        })
+        animation.setFailureListener {
+            animation.isVisible = false
+            continueAfterSuccessAnimation(onFinished)
+        }
+        animation.playAnimation()
+    }
+
+    private fun continueAfterSuccessAnimation(onFinished: () -> Unit) {
+        if (!isAdded || view == null) return
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(AUTH_SUCCESS_PAUSE_MS)
+            // за время паузы экран могли закрыть - тогда никуда не переходим
+            if (isAdded && view != null) {
+                onFinished()
+            }
+        }
     }
 
     /** после авторизации граф авторизации убираем из стека, назад в него уже не вернуться, нам это не надо */
@@ -154,6 +204,11 @@ class LoginFragment : Fragment() {
         binding.editTextPassword.setText("")
         binding.textViewLoginError.isVisible = false
         renderAuthorizedUser()
+    }
+
+    private companion object {
+        /** пауза после анимации успешного входачтобы рассмотреть галочку */
+        const val AUTH_SUCCESS_PAUSE_MS = 1_000L
     }
 }
 

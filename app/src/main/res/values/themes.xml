@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Edukthw06" parent="Theme.Material3.DayNight.NoActionBar" />
+    <!-- для всех TextView теперь базвый шрифт - Geologica.M3-начертания переопределены в type.xml -->
+    <style name="Theme.Edukthw06" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">@font/app_font</item>
+        <item name="fontFamily">@font/app_font</item>
+    </style>
 
     <!-- тема для сплэш-скрина-->
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
