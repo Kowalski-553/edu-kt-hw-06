@@ -8,6 +8,7 @@ import android.widget.RadioGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -83,7 +84,21 @@ class QuizFragment : Fragment() {
         super.onDestroyView()
         countdownJob?.cancel()
         countdownJob = null
+
+        val isScreenRecreating: Boolean = requireActivity().isChangingConfigurations
+        if (sessionViewModel.isResultNavigationPending && !isScreenRecreating) {
+            sessionViewModel.consumeResultNavigation()
+        }
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val isCountdownStale: Boolean = sessionViewModel.isFinished &&
+            !sessionViewModel.isResultNavigationPending
+        if (isCountdownStale) {
+            hideResultCountdown()
+        }
     }
 
     private fun renderSession() {
@@ -233,10 +248,15 @@ class QuizFragment : Fragment() {
             delay(RESULT_COUNTDOWN_MS)
             // пользователь мог уйти на другую вкладку или начать тест заново -
             // тогда не мешаем ему и остаёмся на месте
-            val keepWaiting: Boolean = sessionViewModel.isResultNavigationPending &&
-                navController.currentDestination?.id == R.id.quizFragment
-            if (isAdded && keepWaiting) {
-                sessionViewModel.consumeResultNavigation()
+            val keepWaiting: Boolean = isAdded &&
+                navController.currentDestination?.id == R.id.quizFragment &&
+                sessionViewModel.isResultNavigationPending
+            if (!keepWaiting) return@launch
+
+            sessionViewModel.consumeResultNavigation()
+            val isScreenResumed: Boolean =
+                viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
+            if (isScreenResumed) {
                 navController.navigateToTab(R.id.resultFragment)
             }
         }

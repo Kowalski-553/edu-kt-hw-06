@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -130,11 +131,17 @@ class LoginFragment : Fragment() {
         binding.buttonLogin.isEnabled = false
         playSuccessAnimation {
             binding.buttonLogin.isEnabled = true
-            if (isProfileMode) {
+            // анимация могла доиграть в фоне: переход откладываем, показываем профиль с данными входа
+            val isScreenResumed: Boolean =
+                viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
+            when {
+                !isScreenResumed -> {
+                    binding.animationAuthSuccess.isVisible = false
+                    renderAuthorizedUser()
+                }
                 // профиль открыт поверх вкладок - просто возвращаемся назад
-                navController.popBackStack()
-            } else {
-                enterMainGraph()
+                isProfileMode -> navController.popBackStack()
+                else -> enterMainGraph()
             }
         }
     }
