@@ -122,6 +122,29 @@
                 android:layout_marginTop="24dp"
                 android:text="@string/quiz_restart" />
 
+            <!-- отсчёт до экрана результатов с lottie-анимацией -->
+            <TextView
+                android:id="@+id/textViewCountdownLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="@string/quiz_result_countdown"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animationCountdown"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:importantForAccessibility="no"
+                android:visibility="gone"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="false"
+                app:lottie_rawRes="@raw/lottie_countdown" />
+
         </LinearLayout>
 
     </LinearLayout>

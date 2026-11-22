@@ -69,6 +69,19 @@
             android:layout_marginTop="16dp"
             android:text="@string/login_button" />
 
+        <!-- анимация успешного входа, контурный круг с галочкой -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationAuthSuccess"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:importantForAccessibility="no"
+            android:visibility="gone"
+            app:lottie_autoPlay="false"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/lottie_auth_success" />
+
         <!-- ошибка проверки пары логин-пароль -->
         <TextView
             android:id="@+id/textViewLoginError"

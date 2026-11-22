@@ -30,6 +30,10 @@ class QuizSessionViewModel : ViewModel() {
     var isStarted: Boolean = false
         private set
 
+    /** делаем отсчет, когда пользователь завершил тест, но еще не ушел к результатам */
+    var isResultNavigationPending: Boolean = false
+        private set
+
     val isFinished: Boolean get() = lastResult != null
 
     val total: Int get() = questions.size
@@ -60,6 +64,12 @@ class QuizSessionViewModel : ViewModel() {
 
     fun finish(result: QuizResult) {
         lastResult = result
+        isResultNavigationPending = true
+    }
+
+    /** повторно отсчет не запускаем, если пользователь сам сходил на экран результатов */
+    fun consumeResultNavigation() {
+        isResultNavigationPending = false
     }
 
     fun restart() {
@@ -76,6 +86,7 @@ class QuizSessionViewModel : ViewModel() {
         score = 0
         selectedAnswerIndex = NO_ANSWER
         lastResult = null
+        isResultNavigationPending = false
     }
 
     companion object {

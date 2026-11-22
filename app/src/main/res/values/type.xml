@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    В рамказ ДЗ-9 вместо системного шрифта Roboto применяем шрифт Geologica для всего приложения
+-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="TextAppearance.Material3.DisplayLarge" parent="TextAppearance.M3.Sys.Typescale.DisplayLarge"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.DisplayMedium" parent="TextAppearance.M3.Sys.Typescale.DisplayMedium"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.DisplaySmall" parent="TextAppearance.M3.Sys.Typescale.DisplaySmall"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.HeadlineLarge" parent="TextAppearance.M3.Sys.Typescale.HeadlineLarge"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.HeadlineMedium" parent="TextAppearance.M3.Sys.Typescale.HeadlineMedium"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.HeadlineSmall" parent="TextAppearance.M3.Sys.Typescale.HeadlineSmall"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.TitleLarge" parent="TextAppearance.M3.Sys.Typescale.TitleLarge"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.TitleMedium" parent="TextAppearance.M3.Sys.Typescale.TitleMedium"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.TitleSmall" parent="TextAppearance.M3.Sys.Typescale.TitleSmall"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.BodyLarge" parent="TextAppearance.M3.Sys.Typescale.BodyLarge"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.BodyMedium" parent="TextAppearance.M3.Sys.Typescale.BodyMedium"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.BodySmall" parent="TextAppearance.M3.Sys.Typescale.BodySmall"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.LabelLarge" parent="TextAppearance.M3.Sys.Typescale.LabelLarge"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.LabelMedium" parent="TextAppearance.M3.Sys.Typescale.LabelMedium"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.Material3.LabelSmall" parent="TextAppearance.M3.Sys.Typescale.LabelSmall"
+            tools:ignore="UnusedResources">
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+</resources>
