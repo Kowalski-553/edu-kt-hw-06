@@ -19,6 +19,7 @@ import com.airbnb.lottie.model.KeyPath
 import com.airbnb.lottie.value.LottieValueCallback
 import com.example.edu_kt_hw_06.data.AuthPreferences
 import com.example.edu_kt_hw_06.data.QuizRepository
+import com.example.edu_kt_hw_06.data.UserRole
 import com.example.edu_kt_hw_06.databinding.FragmentLoginBinding
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.delay
@@ -99,7 +100,13 @@ class LoginFragment : Fragment() {
         binding.buttonContinue.isVisible = isAuthorized && !isProfileMode
         binding.buttonLogout.isVisible = isAuthorized
         if (isAuthorized) {
-            binding.textViewAuthorized.text = getString(R.string.login_authorized_as, savedLogin)
+            /*авторизация с ролью. Выводим роль при успешной авторизации на экран*/
+            val roleLabel = when (authPreferences.getRole()) {
+                UserRole.ADMIN -> getString(R.string.role_admin)
+                UserRole.USER -> getString(R.string.role_user)
+            }
+            binding.textViewAuthorized.text =
+                getString(R.string.login_authorized_as, savedLogin, roleLabel)
         }
     }
 
@@ -120,13 +127,14 @@ class LoginFragment : Fragment() {
             return
         }
 
-        // проверяем логин и пароль по таблице users
-        if (!repository.checkCredentials(login, password)) {
+        // проверяем логин и пароль по таблице users и заодно узнаём роль пользователя
+        val user = repository.findUser(login, password)
+        if (user == null) {
             binding.textViewLoginError.isVisible = true
             return
         }
 
-        authPreferences.save(login, password)
+        authPreferences.save(login, password, user.role)
         // если пользователь окажется на экране после анимации, то возвращаем кнопку
         binding.buttonLogin.isEnabled = false
         playSuccessAnimation {
@@ -191,6 +199,11 @@ class LoginFragment : Fragment() {
             null,
             navOptions { popUpTo(R.id.nav_graph_auth) { inclusive = true } }
         )
+        // администратору тест не нужен, сразу открываем библиотеку,
+        // не показывая стартовый экран теста
+        if (authPreferences.getRole() == UserRole.ADMIN) {
+            navController.navigateToTab(R.id.libraryFragment)
+        }
     }
 
     private fun onLogoutClick() {

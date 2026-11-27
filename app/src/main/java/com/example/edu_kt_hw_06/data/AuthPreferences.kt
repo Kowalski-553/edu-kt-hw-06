@@ -12,10 +12,14 @@ class AuthPreferences(context: Context) {
 
     fun getPassword(): String? = preferences.getString(KEY_PASSWORD, null)
 
-    fun save(login: String, password: String) {
+    /** роль сохраняем при входе, чтобы любой экран мог узнать права без запроса в БД */
+    fun getRole(): UserRole = UserRole.fromName(preferences.getString(KEY_ROLE, null))
+
+    fun save(login: String, password: String, role: UserRole) {
         preferences.edit {
             putString(KEY_LOGIN, login)
             putString(KEY_PASSWORD, password)
+            putString(KEY_ROLE, role.name)
         }
     }
 
@@ -27,5 +31,6 @@ class AuthPreferences(context: Context) {
         private const val PREFERENCES_NAME = "auth"
         private const val KEY_LOGIN = "login"
         private const val KEY_PASSWORD = "password"
+        private const val KEY_ROLE = "role"
     }
 }

@@ -14,6 +14,12 @@
         tools:layout="@layout/fragment_quiz" />
 
     <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.example.edu_kt_hw_06.LibraryFragment"
+        android:label="@string/title_library"
+        tools:layout="@layout/fragment_library" />
+
+    <fragment
         android:id="@+id/resultFragment"
         android:name="com.example.edu_kt_hw_06.ResultFragment"
         android:label="@string/title_result"
