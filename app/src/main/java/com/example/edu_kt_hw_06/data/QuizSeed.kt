@@ -6,10 +6,6 @@ internal object QuizSeed {
 
     data class SeedQuestion(val text: String, val answers: List<SeedAnswer>)
 
-    // в открытом виде не очень красиво, надо бы хешировать, но для наших целей допустимо
-    const val USER_LOGIN: String = "user"
-    const val USER_PASSWORD: String = "qwerty"
-
     val questions: List<SeedQuestion> = listOf(
         SeedQuestion(
             text = "Каким оператором в Kotlin делают безопасное приведение типа?",

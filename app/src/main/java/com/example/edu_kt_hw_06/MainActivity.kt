@@ -9,6 +9,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.fragment.NavHostFragment
+import com.example.edu_kt_hw_06.data.AuthPreferences
+import com.example.edu_kt_hw_06.data.UserRole
 import com.example.edu_kt_hw_06.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -16,12 +18,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private lateinit var authPreferences: AuthPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        authPreferences = AuthPreferences(this)
 
         // навигацию берём прямо у NavHostFragment, а не у самой активити
         val navHostFragment: NavHostFragment = supportFragmentManager
@@ -63,7 +67,14 @@ class MainActivity : AppCompatActivity() {
             binding.toolbar.menu.findItem(R.id.action_profile).isVisible =
                 insideMainGraph || isProfileOverlay
             if (insideMainGraph) {
-                binding.bottomNavigationView.selectedItemId = destination.id
+                // у каждой роли свой набор вкладок
+                applyRoleMenu()
+                if (binding.bottomNavigationView.menu.findItem(destination.id)?.isVisible == true) {
+                    binding.bottomNavigationView.selectedItemId = destination.id
+                } else {
+                    // админу доступна только библиотека
+                    leaveHiddenScreenIfNeeded()
+                }
             }
         }
 
@@ -101,6 +112,34 @@ class MainActivity : AppCompatActivity() {
     /** проверям, относится ли экран к графу авторизации */
     private fun NavDestination.isInsideAuthGraph(): Boolean =
         hierarchy.any { destination -> destination.id == R.id.nav_graph_auth }
+
+    /**
+     * в зависимости от роли меняется меню у пользователя. У админа есть только библиотека.
+     * У юзеров видно всё.
+     */
+    private fun applyRoleMenu() {
+        val isAdmin: Boolean = authPreferences.getRole() == UserRole.ADMIN
+        binding.bottomNavigationView.menu.apply {
+            findItem(R.id.quizFragment).isVisible = !isAdmin
+            findItem(R.id.resultFragment).isVisible = !isAdmin
+            findItem(R.id.libraryFragment).isVisible = true
+        }
+    }
+
+    /**
+     * Страховка на случай, если администратор как-то попал на недоступный экран.
+     * Мало ли чё глюкнет.
+     */
+    private fun leaveHiddenScreenIfNeeded() {
+        binding.bottomNavigationView.post {
+            // пока задача ждала очереди, активити могла закрыться
+            if (isFinishing || isDestroyed) return@post
+            val destinationId: Int = navController.currentDestination?.id ?: return@post
+            if (binding.bottomNavigationView.menu.findItem(destinationId)?.isVisible != true) {
+                navController.navigateToTab(R.id.libraryFragment)
+            }
+        }
+    }
 
     private fun showExitConfirmationDialog() {
         MaterialAlertDialogBuilder(this)

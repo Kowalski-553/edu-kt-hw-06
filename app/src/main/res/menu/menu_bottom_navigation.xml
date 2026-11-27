@@ -9,4 +9,8 @@
         android:id="@+id/resultFragment"
         android:icon="@drawable/ic_nav_result"
         android:title="@string/title_result" />
+    <item
+        android:id="@+id/libraryFragment"
+        android:icon="@drawable/ic_nav_library"
+        android:title="@string/title_library" />
 </menu>
